@@ -127,9 +127,9 @@ public class Lexico {
     }
 
 
-
-
     private void avanzar() {
+       char actual = verSiguiente();
+       posicion = posicion + 1;
     }
 
     private Token delimitador() {
