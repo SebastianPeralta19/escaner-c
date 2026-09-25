@@ -132,6 +132,19 @@ public class Lexico {
        posicion = posicion + 1;
     }
 
+    private boolean coincide(char esperado){
+        if(finDelCodigo()){
+            return false;
+        }else if(verSiguiente() !=esperado){
+            return false;
+        }else{
+            avanzar();
+            return true;
+        }
+    }
+
+
+
     private Token delimitador() {
     }
 
@@ -162,6 +175,10 @@ public class Lexico {
         return codigo.charAt(posicion+1);
     }
 
+
     private void omitirEspacios() {
+        while(finDelCodigo() && (verSiguiente()=='\t' || verSiguiente()=='\n' || verSiguiente()== '\r')){
+            avanzar();
+        }
     }
 }
