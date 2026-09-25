@@ -127,9 +127,10 @@ public class Lexico {
     }
 
 
-    private void avanzar() {
+    private char avanzar() {
        char actual = verSiguiente();
        posicion = posicion + 1;
+       return actual;
     }
 
     private boolean coincide(char esperado){
@@ -148,7 +149,47 @@ public class Lexico {
     private Token delimitador() {
     }
 
+
+    /*FUNCIÓN operador():
+    inicio = posicion
+    c = avanzar()                                        // consume el primer carácter del operador
+
+    // Intenta armar operadores de dos caracteres usando coincide()
+    SI c es '=' Y coincide('=') ENTONCES
+        lexema = "=="
+    SINO SI c es '!' Y coincide('=') ENTONCES
+        lexema = "!="
+    SINO SI c es '<' Y coincide('=') ENTONCES
+        lexema = "<="
+    SINO SI c es '>' Y coincide('=') ENTONCES
+        lexema = ">="
+    SINO SI c es '&' Y coincide('&') ENTONCES
+        lexema = "&&"
+    SINO SI c es '|' Y coincide('|') ENTONCES
+        lexema = "||"
+    SINO
+        lexema = codigo.substring(inicio, posicion)      // se quedó como operador de un solo carácter
+
+    DEVOLVER new Token(Token.Tipo.OPERADOR, lexema) */
     private Token operador() {
+        int inicio = posicion;
+        char c = avanzar();
+        if(c == 'c' && coincide('=')){
+            return new Token(Token.Tipo.OPERADOR, "==");
+        }else if(c == '!'&& coincide('!')){
+            return new Token(Token.Tipo.OPERADOR, "!=");
+        }else if(c == '<'&& coincide('!')){
+            return new Token(Token.Tipo.OPERADOR, "<=");
+        }else if(c == '>'&& coincide('!')){
+            return new Token(Token.Tipo.OPERADOR, ">=");
+        }else if(c == '&'&& coincide('!')){
+            return new Token(Token.Tipo.OPERADOR, "&&");
+        }else if(c == '|'&& coincide('!')){
+            return new Token(Token.Tipo.OPERADOR, "||");
+        }else{
+            String lexema = codigo.substring(inicio, posicion);
+            return new Token(Token.Tipo.OPERADOR, lexema);     }
+
     }
 
     private Token caracter() {
