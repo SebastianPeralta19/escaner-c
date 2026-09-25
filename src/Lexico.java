@@ -74,6 +74,9 @@ public class Lexico {
     private boolean finDelCodigo (){
             return posicion >= codigo.length();
         }
+
+
+
     private Token escanearToken() {
 
         omitirEspacios();
@@ -123,6 +126,9 @@ public class Lexico {
         );
     }
 
+
+
+
     private void avanzar() {
     }
 
@@ -147,7 +153,15 @@ public class Lexico {
     private char verSiguiente() {
     }
 
+
+/* Necesito ver el carácter que viene después del actual, sin moverme del sitio. */
+    private char verDespues(){
+        if(posicion+1 >= codigo.length()){
+            return '\0';
+        }
+        return codigo.charAt(posicion+1);
+    }
+
     private void omitirEspacios() {
     }
 }
-
