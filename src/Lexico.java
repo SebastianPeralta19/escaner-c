@@ -46,25 +46,25 @@ public class Lexico {
     /*
     * FUNCIONES PENDIENTES (EN ESE ORDEN)
     *
-    *   finDelCodigo()
+    *   finDelCodigo() hecho por sebastian
         verSiguiente()
-        verDespues()
-        avanzar()
+        verDespues() hecho por sarai
+        avanzar()  hecho por sarai
         coincide()
 *
 *
-*       omitirEspacios()
+*       omitirEspacios() hecho por sarai
 *
 *
-*       identificador()
-        numero()
+*       identificador() hecho por sebastian
+        numero() hecho por sebastian
 *
 *
 *       operador()
         delimitador()
 *
 *
-*       escanearToken()
+*       escanearToken() hecho por sebastian
 *
 *
 *       cadena()
@@ -182,9 +182,45 @@ public class Lexico {
     }
 
     private Token numero() {
+        int inicio = posicion;
+
+        while(Character.isDigit(verSiguiente())){
+        avanzar();
+        }
+
+        boolean decimal = false;
+        if(verSiguiente() == '.' && Character.isDigit(verDespues())){
+            decimal = true;
+            avanzar();
+
+            while (Character.isDigit(verSiguiente())){
+                avanzar();
+            }
+
+            String lexema = codigo.substring(inicio, posicion);
+
+            if(decimal){
+                return new Token(Token.Tipo.DECIMAL, lexema);
+            }
+
+            return new Token(Token.Tipo.ENTERO, lexema);
+
+        }
     }
 
     private Token identificador() {
+        int inicio = posicion;
+
+        while(Character.isLetterOrDigit(verSiguiente()) || verSiguiente() == '_'){
+            avanzar();
+        }
+
+        String lexema = codigo.substring(inicio,posicion);
+
+        if(PALABRAS_RESERVADAS.contains(lexema)){
+            return new Token(Token.Tipo.PALABRA_RESERVADA, lexema);
+        }
+
     }
 
     private char verSiguiente() {
