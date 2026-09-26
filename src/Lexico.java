@@ -177,21 +177,7 @@ public class Lexico {
 
     private Token caracter() {
     }
-/*FUNCIÓN cadena():
-    avanzar()                                            // consume la comilla de APERTURA (no la incluyas en el lexema)
-    inicio = posicion
 
-    MIENTRAS NO finDelCodigo() Y verSiguiente() NO ES '"' HACER
-        avanzar()
-
-    lexema = codigo.substring(inicio, posicion)          // el contenido, SIN las comillas
-
-    SI finDelCodigo() ENTONCES
-        // manejar error: cadena sin cerrar (nunca encontró la comilla de cierre)
-    SI NO
-        avanzar()                                        // consume la comilla de CIERRE
-
-    DEVOLVER new Token(Token.Tipo.CADENA, lexema) */
     private Token cadena() {
         avanzar();
         int inicio = posicion;
