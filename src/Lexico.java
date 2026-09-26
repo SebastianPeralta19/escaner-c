@@ -136,10 +136,13 @@ public class Lexico {
             return new Token(Token.Tipo.OPERADOR, "&&");
         }else if(c == '|'&& coincide('|')){
             return new Token(Token.Tipo.OPERADOR, "||");
+        }else if(c == '<' && coincide('<')){
+            return new Token(Token.Tipo.OPERADOR,"<<");
+        }else if(c=='>' && coincide('>')){
+            return new Token(Token.Tipo.OPERADOR,">>");
         }else{
             String lexema = codigo.substring(inicio, posicion);
             return new Token(Token.Tipo.OPERADOR, lexema);     }
-
     }
 
     private Token caracter() {
