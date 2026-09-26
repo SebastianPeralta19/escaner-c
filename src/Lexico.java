@@ -3,6 +3,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import Token.Tipo;
+
 public class Lexico {
     private final String codigo;
     private int posicion = 0;
@@ -145,32 +147,13 @@ public class Lexico {
     }
 
 
-
     private Token delimitador() {
+        char c=avanzar();
+        return  new Token(Token.Tipo.DELIMITADOR, String.valueOf(c));
     }
 
 
-    /*FUNCIÓN operador():
-    inicio = posicion
-    c = avanzar()                                        // consume el primer carácter del operador
 
-    // Intenta armar operadores de dos caracteres usando coincide()
-    SI c es '=' Y coincide('=') ENTONCES
-        lexema = "=="
-    SINO SI c es '!' Y coincide('=') ENTONCES
-        lexema = "!="
-    SINO SI c es '<' Y coincide('=') ENTONCES
-        lexema = "<="
-    SINO SI c es '>' Y coincide('=') ENTONCES
-        lexema = ">="
-    SINO SI c es '&' Y coincide('&') ENTONCES
-        lexema = "&&"
-    SINO SI c es '|' Y coincide('|') ENTONCES
-        lexema = "||"
-    SINO
-        lexema = codigo.substring(inicio, posicion)      // se quedó como operador de un solo carácter
-
-    DEVOLVER new Token(Token.Tipo.OPERADOR, lexema) */
     private Token operador() {
         int inicio = posicion;
         char c = avanzar();
@@ -218,7 +201,7 @@ public class Lexico {
 
 
     private void omitirEspacios() {
-        while(finDelCodigo() && (verSiguiente()=='\t' || verSiguiente()=='\n' || verSiguiente()== '\r')){
+        while(!finDelCodigo() && (verSiguiente()=='\t' || verSiguiente()=='\n' || verSiguiente()== '\r')){
             avanzar();
         }
     }
