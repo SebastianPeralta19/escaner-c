@@ -1,4 +1,3 @@
-import java.awt.font.TextHitInfo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -42,36 +41,6 @@ public class Lexico {
 
         return tokens;
     }
-
-    /*
-    * FUNCIONES PENDIENTES (EN ESE ORDEN)
-    *
-    *   finDelCodigo() hecho por sebastian
-        verSiguiente()
-        verDespues() hecho por sarai
-        avanzar()  hecho por sarai
-        coincide()
-*
-*
-*       omitirEspacios() hecho por sarai
-*
-*
-*       identificador() hecho por sebastian
-        numero() hecho por sebastian
-*
-*
-*       operador()
-        delimitador()
-*
-*
-*       escanearToken() hecho por sebastian
-*
-*
-*       cadena()
-        caracter()
-
-
-    * */
 
     private boolean finDelCodigo (){
             return posicion >= codigo.length();
@@ -152,42 +121,27 @@ public class Lexico {
     }
 
 
-
     private Token operador() {
         int inicio = posicion;
         char c = avanzar();
-        if(c == 'c' && coincide('=')){
+        if(c == '=' && coincide('=')){
             return new Token(Token.Tipo.OPERADOR, "==");
-        }else if(c == '!'&& coincide('!')){
+        }else if(c == '!'&& coincide('=')){
             return new Token(Token.Tipo.OPERADOR, "!=");
-        }else if(c == '<'&& coincide('!')){
+        }else if(c == '<'&& coincide('=')){
             return new Token(Token.Tipo.OPERADOR, "<=");
-        }else if(c == '>'&& coincide('!')){
+        }else if(c == '>'&& coincide('=')){
             return new Token(Token.Tipo.OPERADOR, ">=");
-        }else if(c == '&'&& coincide('!')){
+        }else if(c == '&'&& coincide('&')){
             return new Token(Token.Tipo.OPERADOR, "&&");
-        }else if(c == '|'&& coincide('!')){
+        }else if(c == '|'&& coincide('|')){
             return new Token(Token.Tipo.OPERADOR, "||");
         }else{
             String lexema = codigo.substring(inicio, posicion);
             return new Token(Token.Tipo.OPERADOR, lexema);     }
 
     }
-/*FUNCIÓN caracter():
-    avanzar()                                            // consume la comilla simple de apertura
-    inicio = posicion
 
-    MIENTRAS NO finDelCodigo() Y verSiguiente() NO ES '\'' HACER
-        avanzar()
-
-    lexema = codigo.substring(inicio, posicion)
-
-    SI finDelCodigo() ENTONCES
-        // manejar error: carácter sin cerrar
-    SI NO
-        avanzar()                                        // consume la comilla simple de cierre
-
-    DEVOLVER new Token(Token.Tipo.CARACTER, lexema) */
     private Token caracter() {
         avanzar();
         int inicio = posicion;
@@ -198,9 +152,9 @@ public class Lexico {
         if(finDelCodigo()){
             System.out.println("Error: caracter sin cerrar");
         }else{
-            avanzar()
-            return new Token(Token.Tipo.CARACTER,lexema);
+            avanzar(); 
         }
+         return new Token(Token.Tipo.CARACTER,lexema);
     }
 
     private Token cadena() {
@@ -220,49 +174,54 @@ public class Lexico {
     }
 
     private Token numero() {
-        int inicio = posicion;
+    int inicio = posicion;
 
-        while(Character.isDigit(verSiguiente())){
+    while (Character.isDigit(verSiguiente())) {
         avanzar();
-        }
+    }
 
-        boolean decimal = false;
-        if(verSiguiente() == '.' && Character.isDigit(verDespues())){
-            decimal = true;
+    boolean decimal = false;
+
+    if (verSiguiente() == '.' && Character.isDigit(verDespues())) {
+        decimal = true;
+
+        avanzar();
+
+        while (Character.isDigit(verSiguiente())) {
             avanzar();
-
-            while (Character.isDigit(verSiguiente())){
-                avanzar();
-            }
-
-            String lexema = codigo.substring(inicio, posicion);
-
-            if(decimal){
-                return new Token(Token.Tipo.DECIMAL, lexema);
-            }
-
-            return new Token(Token.Tipo.ENTERO, lexema);
         }
+    }
+
+    String lexema = codigo.substring(inicio, posicion);
+
+    if (decimal) {
+        return new Token(Token.Tipo.DECIMAL, lexema);
+    }
+    return new Token(Token.Tipo.ENTERO, lexema);
     }
 
     private Token identificador() {
-        int inicio = posicion;
+    int inicio = posicion;
 
-        while(Character.isLetterOrDigit(verSiguiente()) || verSiguiente() == '_'){
-            avanzar();
-        }
-
-        String lexema = codigo.substring(inicio,posicion);
-
-        if(PALABRAS_RESERVADAS.contains(lexema)){
-            return new Token(Token.Tipo.PALABRA_RESERVADA, lexema);
-        }
-
+    while (Character.isLetterOrDigit(verSiguiente()) || verSiguiente() == '_') {
+        avanzar();
     }
 
-    private char verSiguiente() {
+    String lexema = codigo.substring(inicio, posicion);
+
+    if (PALABRAS_RESERVADAS.contains(lexema)) {
+        return new Token(Token.Tipo.PALABRA_RESERVADA, lexema);
     }
 
+    return new Token(Token.Tipo.IDENTIFICADOR, lexema);
+}
+
+   private char verSiguiente() {
+    if (finDelCodigo()) {
+        return '\0';
+    }
+    return codigo.charAt(posicion);
+}
 
 /* Necesito ver el carácter que viene después del actual, sin moverme del sitio. */
     private char verDespues(){
@@ -274,8 +233,13 @@ public class Lexico {
 
 
     private void omitirEspacios() {
-        while(!finDelCodigo() && (verSiguiente()=='\t' || verSiguiente()=='\n' || verSiguiente()== '\r')){
-            avanzar();
-        }
+    while (!finDelCodigo() &&
+           (verSiguiente() == ' ' ||
+            verSiguiente() == '\t' ||
+            verSiguiente() == '\n' ||
+            verSiguiente() == '\r')) {
+
+        avanzar();
     }
+}
 }
