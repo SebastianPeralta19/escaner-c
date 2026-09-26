@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import Token.Tipo;
+
 
 public class Lexico {
     private final String codigo;
@@ -46,25 +46,25 @@ public class Lexico {
     /*
     * FUNCIONES PENDIENTES (EN ESE ORDEN)
     *
-    *   finDelCodigo()
+    *   finDelCodigo() hecho por sebastian
         verSiguiente()
-        verDespues()
-        avanzar()
+        verDespues() hecho por sarai
+        avanzar()  hecho por sarai
         coincide()
 *
 *
-*       omitirEspacios()
+*       omitirEspacios() hecho por sarai
 *
 *
-*       identificador()
-        numero()
+*       identificador() hecho por sebastian
+        numero() hecho por sebastian
 *
 *
 *       operador()
         delimitador()
 *
 *
-*       escanearToken()
+*       escanearToken() hecho por sebastian
 *
 *
 *       cadena()
@@ -80,7 +80,6 @@ public class Lexico {
 
 
     private Token escanearToken() {
-
         omitirEspacios();
 
         if (finDelCodigo()) {
@@ -174,8 +173,34 @@ public class Lexico {
             return new Token(Token.Tipo.OPERADOR, lexema);     }
 
     }
+/*FUNCIÓN caracter():
+    avanzar()                                            // consume la comilla simple de apertura
+    inicio = posicion
 
+    MIENTRAS NO finDelCodigo() Y verSiguiente() NO ES '\'' HACER
+        avanzar()
+
+    lexema = codigo.substring(inicio, posicion)
+
+    SI finDelCodigo() ENTONCES
+        // manejar error: carácter sin cerrar
+    SI NO
+        avanzar()                                        // consume la comilla simple de cierre
+
+    DEVOLVER new Token(Token.Tipo.CARACTER, lexema) */
     private Token caracter() {
+        avanzar();
+        int inicio = posicion;
+        while (!finDelCodigo() && verSiguiente() != '\'') {
+            avanzar();
+        }
+        String lexema = codigo.substring(inicio, posicion);
+        if(finDelCodigo()){
+            System.out.println("Error: caracter sin cerrar");
+        }else{
+            avanzar()
+            return new Token(Token.Tipo.CARACTER,lexema);
+        }
     }
 
     private Token cadena() {
@@ -195,9 +220,44 @@ public class Lexico {
     }
 
     private Token numero() {
+        int inicio = posicion;
+
+        while(Character.isDigit(verSiguiente())){
+        avanzar();
+        }
+
+        boolean decimal = false;
+        if(verSiguiente() == '.' && Character.isDigit(verDespues())){
+            decimal = true;
+            avanzar();
+
+            while (Character.isDigit(verSiguiente())){
+                avanzar();
+            }
+
+            String lexema = codigo.substring(inicio, posicion);
+
+            if(decimal){
+                return new Token(Token.Tipo.DECIMAL, lexema);
+            }
+
+            return new Token(Token.Tipo.ENTERO, lexema);
+        }
     }
 
     private Token identificador() {
+        int inicio = posicion;
+
+        while(Character.isLetterOrDigit(verSiguiente()) || verSiguiente() == '_'){
+            avanzar();
+        }
+
+        String lexema = codigo.substring(inicio,posicion);
+
+        if(PALABRAS_RESERVADAS.contains(lexema)){
+            return new Token(Token.Tipo.PALABRA_RESERVADA, lexema);
+        }
+
     }
 
     private char verSiguiente() {
